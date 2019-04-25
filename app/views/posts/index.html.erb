@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Posts</h1>
+
+<table class="table table-striped table-hover ">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Usuario</th>
+      <th>Nº de comentarios</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @posts.each do |post| %>
+      <tr>
+        <td><%= link_to "#{post.title}", post %></td>
+        <td><%= post.user.name %></td>
+        <td><%= post.comments.count %></td>
+        <% if current_user.role == 'admin' || current_user.id == post.user_id %>
+          <td><%= link_to 'Editar', edit_post_path(post), class: 'btn btn-sm btn-success' %></td>
+          <td><%= link_to 'Eliminar', post, method: :delete, data: { confirm: 'Estás seguro que deseas eliminar el Post?' }, class: 'btn btn-sm btn-danger' %></td>
+        <% else %>
+          <td><%= link_to 'Editar', root_path, class: 'btn btn-sm btn-success disabled' %></td>
+          <td><%= link_to 'Eliminar', post, method: :delete, class: 'btn btn-sm btn-danger disabled' %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Nuevo Post', new_post_path, class: 'btn btn-primary' %>

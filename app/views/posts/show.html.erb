@@ -1,0 +1,50 @@
+<div class="text-center">
+	<p id="notice"><%= notice %></p>
+
+	<legend><h1><%= @post.title %></h1></legend>
+
+	<p><strong>Publicado por:</strong> <%= @post.user.name %></p>
+
+	<div class="jumbotron">
+		<p>
+	  <%= @post.content %>
+	</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-4">
+		<div class="well well-sm">
+			<legend>Comentar:</legend>
+			<%= form_with(model: [@post, Comment.new], local: true, html: { class: 'form-horizontal' }) do |f| %>
+				<div class="form-group">
+					<div class="col-md-12">
+						<%= f.text_area :content, placeholder: 'Escribe tu comentario aquí...', class: 'form-control' %>
+					</div>
+				</div>
+				<%= f.submit 'Comentar', class: 'btn btn-primary' %>
+			<% end %>
+			  
+		</div>
+	</div>
+	<div class="col-md-8">
+		<% counter = 0 %>
+		<% @comments.each do |comment| %>
+			#<%= counter += 1 %>
+			<div class="well well-sm">
+				<strong><%= comment.user.name %>:</strong>
+				<br>
+				<%= comment.content %>
+				<div class="text-right">
+				<% if current_user.admin? || current_user.id == @post.user_id %>
+					<%= link_to 'Eliminar', post_comment_path(@post,comment), method: :delete, data: { confirm: 'Estás seguro que deseas eliminar el Comentario?' }, class: 'btn btn-xs btn-danger' %>
+				<% else %>
+					<%= link_to 'Eliminar', root_path, method: :delete, class: 'btn btn-xs btn-danger disabled' %>
+				<% end %>
+				</div>
+			</div>
+		<% end %>
+	</div>
+</div>
+
+<%#= link_to 'Editar', edit_post_path(@post) %>
+<%#= link_to 'Volver', posts_path, class: 'btn btn-default' %>
